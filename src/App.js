@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import ReactDOM from 'react-dom';
 import {
     Link,
     Redirect
@@ -33,27 +32,28 @@ class Pokemon extends React.Component {
   constructor(props)
   {
     super(props);
-    this.htmlDisplay = [];
-    this.state = {value: '',redirect:null};
+    this.state = {value: '',redirect:null,pokemons: []};
     this.handleChange = this.handleChange.bind(this);
     this.searchPokemon = this.searchPokemon.bind(this)
     this.getPokemonData = this.getPokemonData.bind(this);
     this.firstPage = this.firstPage.bind(this);
-    this.nextPage = this.nextPage.bind(this);
     this.initialLoad = this.initialLoad.bind(this);
+
+  }
+//  style : display grid
+
+  componentDidMount()// se apeleaza la montare
+  {
     this.initialLoad();
   }
 
+  // sa fac doar la search cu event cu target.value
   handleChange = (event)=>
   {
     this.searchPokemon(event.target.value);
   }
 
-  nextPage = (id) =>
-  {
-    this.setState({redirect:"/"+ id})
-  }
-
+  // dau return la componenta si dau la props elementul(e)
   render()
   {
     if (this.state.redirect) {
@@ -67,6 +67,14 @@ class Pokemon extends React.Component {
           </form>
           <div id={"Pokemons"}>
 
+            {
+              this.state.pokemons.map(e=>
+              {
+                return(
+                    e
+                );
+              })
+            }
           </div>
 
         </div>
@@ -105,14 +113,17 @@ class Pokemon extends React.Component {
         .then(response => response.json())
         .then(pokedata => this.showPokeData(pokedata))
   }
+  //la array fac doar de pokedata
   showPokeData = (pokedata)=>
   {
     //let ceva =  this.firstPage();
-    this.htmlDisplay.push(this.firstPage(pokedata));
-
-    ReactDOM.render(<div>{this.htmlDisplay}</div>,document.getElementById("Pokemons"));
+    //this.htmlDisplay.push(this.firstPage(pokedata));
+    this.setState({
+      pokemons: [...this.state.pokemons,this.firstPage(pokedata)]
+    })
+    //ReactDOM.render(<div>{this.htmlDisplay}</div>,document.getElementById("Pokemons"));
   }
-
+//componenta noua care sa primeasca poke data
   firstPage = (pokedata) =>
   {
 
@@ -122,11 +133,14 @@ class Pokemon extends React.Component {
         <div key={pokedata.id} data-name={pokedata.name} className={"allPoke"}>
           <h6>Pokemon Name:{pokedata.name}</h6>
           <p>Pokemon Id: {pokedata.id}</p>
-          <img  onClick={() =>this.nextPage(pokedata.id)} src={pokedata.sprites.front_default || pokedata.sprites.back_default} alt=""/>
+          <Link to={`/${pokedata.id}`}> {/*asa pun variabile in javascript */}
+            <img src={pokedata.sprites.front_default || pokedata.sprites.back_default} alt=""/>
+          </Link>
         </div>
     );
   }
 }
+
 
 
 export default App;
