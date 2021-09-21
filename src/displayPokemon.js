@@ -1,5 +1,6 @@
 import React from "react";
 import {useState}  from 'react';
+import {Card,Image} from "semantic-ui-react";
 
 const PokemonShow = (props) =>
 {
@@ -32,15 +33,20 @@ const dataForSpecificPokemon = (onlyPokemon) =>
      pokemonType(onlyPokemon.types,typeArray);
     let printArray = typeArray.map((element,index) =>(<p key={index}>{element}</p>))
      return(
-         <div>
-             <p>{id}</p>
-             <p>{name}</p>
-             <p>{weight}</p>
-             <div>
-             {printArray}
-             </div>
-             <img src={img} alt={""}/>
-         </div>
+         <Card>
+             <Image src={img} alt={""}/>
+             <Card.Content>
+                 <Card.Description>
+                     <p>Pokemon name: {name}</p>
+                     <p>Pokemon id: {id}</p>
+                     <p>Pokemon Weight: {weight}</p>
+                     <p>Types: </p>
+                     <div>
+                     {printArray}
+                     </div>
+                 </Card.Description>
+             </Card.Content>
+         </Card>
      );
 
 
