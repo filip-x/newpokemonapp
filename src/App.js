@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import 'semantic-ui-css/semantic.min.css';
 import {Card, Image} from "semantic-ui-react";
+import PokeCard from './Pokemon/PokeCard';
 
 function App() {
   return (
@@ -22,13 +23,12 @@ class Pokemon extends React.Component {
     super(props);
     this.state = {value: '',redirect:null,pokemons: []};
     this.handleChange = this.handleChange.bind(this);
-    this.searchPokemon = this.searchPokemon.bind(this)
     this.getPokemonData = this.getPokemonData.bind(this);
     this.firstPage = this.firstPage.bind(this);
     this.initialLoad = this.initialLoad.bind(this);
 
   }
-//  style : display grid
+
   componentDidMount()// se apeleaza la montare
   {
     this.initialLoad();
@@ -37,7 +37,16 @@ class Pokemon extends React.Component {
   // sa fac doar la search cu event cu target.value
   handleChange = (event)=>
   {
-    this.searchPokemon(event.target.value);
+    //this.searchPokemon(event.target.value);
+    let poke = event.target.value;
+    console.log(poke);
+    Array.prototype.forEach.call(document.getElementsByClassName("allPoke"), (pokemon) => {
+      console.log(pokemon.dataset.name + " " + pokemon.dataset.name.indexOf(poke) + " " + poke);
+      if (pokemon.dataset.name.indexOf(poke) !== 0)
+        pokemon.parentNode.style.display = "none";
+      else pokemon.parentNode.style.display = "block";
+    })
+
   }
   // dau return la componenta si dau la props elementul(e)
   render()
@@ -54,10 +63,15 @@ class Pokemon extends React.Component {
             <br/>
           <Card.Group id={"Pokemons"}  centered={true}>
             {
-              this.state.pokemons.map(e=>
+              this.state.pokemons.sort((a, b) => {
+                if (a.id > b.id)
+                  return 1;
+                return -1;
+              })
+              .map(e=>
               {
                 return(
-                    e
+                    <PokeCard pokedata={e}/>
                 );
               })
             }
@@ -78,18 +92,6 @@ class Pokemon extends React.Component {
           })
         })
   }
-
-  searchPokemon = (inputValue) =>
-  {
-    let poke = inputValue;
-    console.log(poke);
-    Array.prototype.forEach.call(document.getElementsByClassName("allPoke"), (pokemon) => {
-      console.log(pokemon.dataset.name + " " + pokemon.dataset.name.indexOf(poke) + " " + poke);
-      if (pokemon.dataset.name.indexOf(poke) !== 0)
-        pokemon.parentNode.style.display = "none";
-      else pokemon.parentNode.style.display = "block";
-    })
-  }
   getPokemonData = (pokemon) => {
     let urlPokemon = pokemon.url;
     fetch(urlPokemon)
@@ -100,7 +102,7 @@ class Pokemon extends React.Component {
   showPokeData = (pokedata)=>
   {
     this.setState({
-      pokemons: [...this.state.pokemons,this.firstPage(pokedata)]
+      pokemons: [...this.state.pokemons,pokedata]
     })
   }
 //componenta noua care sa primeasca poke data
