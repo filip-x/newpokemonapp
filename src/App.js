@@ -75,7 +75,7 @@ class Pokemon extends React.Component {
   }
 
   initialLoad = () => {
-    fetch('http://pokeapi.co/api/v2/pokemon?limit=151')
+    fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
       .then(response => response.json())
       .then(allpokemon => {
         allpokemon["results"].forEach((pokemon) => {

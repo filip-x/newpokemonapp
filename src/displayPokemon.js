@@ -8,7 +8,7 @@ const PokemonShow = (props) =>
     let [printStuff,setPrintStuff] = useState(null);
    const idPokemon = props.match.params.id;
    //now we featch again so we take the things what we need based on the only pokemon we have in the new tab
-    fetch('http://pokeapi.co/api/v2/pokemon/'+idPokemon)
+    fetch('https://pokeapi.co/api/v2/pokemon/'+idPokemon)
         .then(response => response.json())
         .then(onlyPokemon =>
         {
