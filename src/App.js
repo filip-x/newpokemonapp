@@ -75,31 +75,19 @@ class Pokemon extends React.Component {
   }
 
   initialLoad = () => {
-    // Use relative URL to go through nginx proxy (avoids CORS issues)
-    fetch('/api/v2/pokemon?limit=151')
+    fetch('http://pokeapi.co/api/v2/pokemon?limit=151')
       .then(response => response.json())
       .then(allpokemon => {
         allpokemon["results"].forEach((pokemon) => {
           this.getPokemonData(pokemon);
         })
       })
-      .catch(error => {
-        console.error('Error fetching Pokemon list:', error);
-      })
   }
   getPokemonData = (pokemon) => {
-    // Convert pokeapi.co URL to relative URL for proxy
     let urlPokemon = pokemon.url;
-    // Replace http://pokeapi.co or https://pokeapi.co with /api to use nginx proxy
-    if (urlPokemon.includes('pokeapi.co')) {
-      urlPokemon = urlPokemon.replace(/https?:\/\/pokeapi\.co\/api/, '/api');
-    }
     fetch(urlPokemon)
       .then(response => response.json())
       .then(pokedata => this.showPokeData(pokedata))
-      .catch(error => {
-        console.error('Error fetching Pokemon data:', error);
-      })
   }
   showPokeData = (pokedata) => {
     this.setState({
